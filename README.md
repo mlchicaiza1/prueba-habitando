@@ -1,59 +1,75 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# FakeStore Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este es un proyecto construido siguiendo los principios de **Clean Architecture** para consumir la API pública de [FakeStore](https://fakestoreapi.com/).
 
-## About Laravel
+La entidad de Productos se gestiona puramente en memoria consumiendo la API externa, utilizando Data Transfer Objects (DTOs) en lugar de modelos tradicionales de base de datos. Se implementaron mecanismos de caché para optimizar el rendimiento y evitar el límite de peticiones (rate limits) de la API externa.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tecnologías Utilizadas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend:** Laravel 12
+- **Arquitectura:** Clean Architecture (Capas: Domain, Application, Infrastructure, Presentation)
+- **Frontend:** Vue 3 + InertiaJS
+- **Estilos:** Tailwind CSS
+- **Manejo de Datos:** `spatie/laravel-data` para tipado estricto de DTOs.
+- **Base de datos (Sesiones/Usuarios):** SQLite (Solo para Autenticación)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Características
 
-## Learning Laravel
+- 🛒 Listado interactivo de productos simulados.
+- 🔍 Búsqueda en tiempo real por nombre o descripción.
+- 🏷️ Filtrado por categoría.
+- 💰 Ordenamiento por precio.
+- ➕ Simulación de creación de productos (POST).
+- 🔐 Autenticación de usuarios obligatoria para acceder a las rutas de productos.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Autenticación
+**Sí**, se requiere estar autenticado para acceder al panel de productos. Al tratarse de un entorno de prueba local con SQLite, puedes crear cualquier cuenta de usuario a través del enlace de `Register` o iniciar sesión desde `Log in`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## URLs Importantes
 
-## Laravel Sponsors
+| Recurso | URL |
+|---|---|
+| **Inicio** | `http://localhost:8000/` |
+| **Login** | `http://localhost:8000/login` |
+| **Registro** | `http://localhost:8000/register` |
+| **Catálogo Productos** | `http://localhost:8000/products` |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Despliegue Local
 
-### Premium Partners
+Para levantar este proyecto en tu máquina local sin usar Docker, sigue estos pasos:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. **Clonar e instalar dependencias:**
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Contributing
+2. **Configurar el entorno:**
+   Copia el archivo de configuración si no existe:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. **Preparar la base de datos (para Autenticación):**
+   Asegúrate de que la base de datos SQLite esté creada y corre las migraciones:
+   ```bash
+   touch database/database.sqlite
+   php artisan migrate
+   ```
 
-## Code of Conduct
+4. **Levantar los servidores:**
+   Necesitarás dos terminales.
+   
+   En la primera, levanta el backend de Laravel:
+   ```bash
+   php artisan serve
+   ```
+   
+   En la segunda, levanta el compilador de assets (Vite):
+   ```bash
+   npm run dev
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. **Acceder:**
+   Abre tu navegador en `http://localhost:8000/register`, crea una cuenta y navega hacia la opción "Productos" en el menú principal.
